@@ -1,0 +1,21 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.scratch
+
+# Node modules (for future tools)
+node_modules/
+npm-debug.log*
+
+# Build directories
+dist/
+build/
+
+# Local env files (passwords/keys)
+.env
+.env.local
