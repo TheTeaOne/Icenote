@@ -76,8 +76,9 @@ body{
 }
 
 .sidebar-label {
-    display: none;
+    width: 0;
     opacity: 0;
+    overflow: hidden;
     transition: opacity 0.3s;
     white-space: nowrap;
 }
@@ -86,11 +87,12 @@ body{
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 0;
-    justify-content: center;
     border-radius: 25px;
     color: white;
     cursor: pointer;
+    transition: padding 0.3s, justify-content 0s;
+    justify-content: flex-start;
+    padding: 12px 0 12px 16px;
 }
 
 
@@ -99,7 +101,7 @@ body{
 }
 
 .sidebar-item.active{
-    background-color: #3a3a3a;
+    background-color: #0958b3;
     color: white;
 }
 
@@ -109,7 +111,8 @@ body{
 }
 
 .sidebar.open .sidebar-label {
-    display: block;
+    width: auto;
+    opacity: 1;
 }
 
 .sidebar-icon {
