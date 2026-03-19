@@ -20,14 +20,16 @@ body{
 }
 
 #burger{
-    color: white;
-    font-size: 30px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    padding: 5px;
+    padding: 10px;
+    transition: border-radius 0.3s ease, background-color 0.2s;
+    color: white;
 }
 
 #burger:hover{
-    border-radius: 25px;
+    border-radius: 100px;
     background-color:#3a3a3a;
 }
 
@@ -51,6 +53,7 @@ body{
 #headerName{
     color: #0077FF;
     font-size: 25px;
+    cursor: default;
 }
 
 .search{
@@ -64,6 +67,7 @@ body{
     position: absolute;
     left: 12px;
     pointer-events: none;
+    color: white;
 }
 
 .search input{
@@ -73,7 +77,6 @@ body{
     padding: 8px 16px 8px 44px;
     color: white;
     outline: none;
-    /* width: 450px; */
     width: 100%;
     height: 25px;
 }
@@ -87,13 +90,27 @@ body{
     background-color: #444;
 }
 
+#settings{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+    transition: border-radius 0.3s ease, background-color 0.2s;
+}
+
+#settings:hover{
+    border-radius: 100px;
+    background-color:#3a3a3a;
+}
+
 .wrapper{
     display: flex;
     height: calc(100vh - 60px);
 }
 
 .sidebar{
-    width: 60px;
+    width: 80px;
     transition: width 0.3s;
     background-color: #262626;
     overflow: hidden;
@@ -105,28 +122,31 @@ body{
 
 .sidebar-nav ul{
     list-style: none;
-    padding: 0;
+    padding: 8px;
     margin: 0;
 }
 
 .sidebar-label {
-    width: 0;
+    margin-left: 12px;
     opacity: 0;
-    overflow: hidden;
     transition: opacity 0.3s;
     white-space: nowrap;
+    color: white;
 }
 
 .sidebar-item{
     display: flex;
     align-items: center;
-    gap: 12px;
-    border-radius: 25px;
-    color: white;
+    width: 48px;
+    height: 48px;
+    margin: 4px 12px;
+    border-radius: 50px;
+    color: #C0C0C0;
     cursor: pointer;
-    transition: padding 0.3s, justify-content 0s;
     justify-content: flex-start;
-    padding: 12px 0 12px 16px;
+    padding: 0;
+    overflow: hidden;
+    transition: width 0.3s ease, border-radius 0.3s ease, background-color 0.2s;
 }
 
 
@@ -140,8 +160,8 @@ body{
 }
 
 .sidebar.open .sidebar-item{
-    justify-content: flex-start;
-    padding: 12px 16px;
+    width: calc(100% - 24px);
+    border-radius: 25px;
 }
 
 .sidebar.open .sidebar-label {
@@ -151,9 +171,11 @@ body{
 
 .sidebar-icon {
     flex-shrink: 0;
-    width: 27px;
+    width: 48px;
+    height: 48px;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 main{
