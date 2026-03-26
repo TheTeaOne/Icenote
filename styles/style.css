@@ -179,5 +179,77 @@ body{
 }
 
 main{
+    display: flex;
     flex: 1;
+    justify-content: center;
+    padding: 24px;
+    align-items: flex-start;
+
+}
+
+.create-note{
+    background-color: #262626;
+    width: 50%;
+    padding: 10px 20px;
+    margin-top: 24px;
+    display: flex;
+    border-radius: 25px;
+    outline: 3px solid #0958b3;
+    transition: outline 0.3s;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.create-note:hover{
+    outline: 3px solid #0077FF;
+}
+
+.note-input {
+    flex: 1;
+    min-width: 150px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    resize: none;
+    field-sizing: content; 
+    min-height: 1.5em;
+    padding: 8px 0;
+    min-height: 1.5em;
+    height: auto; 
+    overflow: hidden;
+    display: block;    
+
+}
+
+/* .note-input:focus{
+    border-bottom: 2px solid #0077FF ;
+} */
+
+.note-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+    padding-bottom: 4px;
+    /* margin-top: 12px; */
+}
+
+#addList, #addPhoto{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    padding: 8px;
+    border-radius: 100px;
+    transition: background-color 0.3s;
+}
+
+#addList:hover, #addPhoto:hover{
+    background-color: #3a3a3a;
+    color: white;
 }
