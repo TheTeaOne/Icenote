@@ -222,13 +222,10 @@ main{
     min-height: 1.5em;
     height: auto; 
     overflow: hidden;
-    display: block;    
-
+    display: block;
+    box-sizing: border-box;
+    transition: height 0.2s ease;
 }
-
-/* .note-input:focus{
-    border-bottom: 2px solid #0077FF ;
-} */
 
 .note-actions{
     display: flex;
@@ -236,7 +233,6 @@ main{
     gap: 12px;
     margin-left: auto;
     padding-bottom: 4px;
-    /* margin-top: 12px; */
 }
 
 #addList, #addPhoto{
