@@ -270,6 +270,26 @@ main{
     color: white;
 }
 
+.button{
+    display: flex;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 8px;
+    transition: background-color 0,2s;
+    color: white;
+    font-weight: 500;
+    margin-left: auto;
+    align-items: center;
+}
+
+.button:hover{
+    background-color: #3a3a3a;
+}
+
+.create-note.active #createBlock{
+    display: block !important;
+}
+
 .create-note.active .note-actions {
     width: 100%;
     justify-content: flex-start;
