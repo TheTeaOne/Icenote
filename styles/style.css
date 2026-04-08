@@ -181,9 +181,10 @@ body{
 main{
     display: flex;
     flex: 1;
-    justify-content: center;
+    flex-direction: column;
     padding: 24px;
-    align-items: flex-start;
+    align-items: center;
+    width: 100%;
 }
 
 .create-note{
@@ -296,4 +297,39 @@ main{
     border-top: 1px solid #3c4043;
     padding-top: 10px;
     margin-top: 5px;
+}
+
+.notes-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.note-card{
+    background-color: #262626;
+    border: 1px solid #0958b3;
+    border-radius: 20px;
+    padding: 15px;
+    color: white;
+    word-wrap: break-word;
+}
+
+.note-card:hover{
+    border: 2px solid #0077FF;
+}
+
+.note-card h3{
+    margin-top: 0;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.note-card p{
+    font-size: 1rem;
+    color: #ffffff;
+    white-space: pre-wrap;
 }

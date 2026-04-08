@@ -7,6 +7,8 @@ const titleBlock = document.getElementById('titleBlock')
 const createBtn = document.getElementById('createBlock')
 const titleInput = document.querySelector('.title-input')
 
+const notesWrapper = document.getElementById('notesWrapper')
+
 burger.addEventListener("click", function() {
     sidebar.classList.toggle("open")
 })
@@ -37,16 +39,30 @@ document.addEventListener('click', function(event) {
 
 if (createBtn){
     createBtn.addEventListener('click', function(){
-        const noteDate = {
-            title: titleInput ? titleInput.value: '',
-            text: noteInput.value
-        }
-        console.log("Note was Created", noteDate)
-        titleInput.value = ''
+        const title = titleInput ? titleInput.value : ''
+        const text = noteInput.value    
+        if(text.trim()=== '') return
+        renderNote( title, text)
+        console.log("Note was Created", {title, text})
+if(titleInput) titleInput.value = ''
         noteInput.value = ''
         noteContainer.classList.remove('active')
         titleBlock.classList.add('hidden')
         createBtn.classList.add('hidden')
         noteInput.style.height = 'auto'
     })
+}
+
+function renderNote(title, text){
+    const card = document.createElement('div')
+    card.classList.add('note-card')
+if(title){
+    const h3 = document.createElement('h3')
+    h3.innerText = title
+    card.appendChild(h3)
+}
+const p = document.createElement('p')
+    p.innerText = text
+    card.appendChild(p)
+    notesWrapper.prepend(card)
 }
