@@ -311,15 +311,16 @@ main{
 
 .note-card{
     background-color: #262626;
-    border: 1px solid #0958b3;
+    outline: 2px solid #0958b3;
     border-radius: 20px;
     padding: 15px;
     color: white;
     word-wrap: break-word;
+    transition: outline 0.3s;
 }
 
 .note-card:hover{
-    border: 2px solid #0077FF;
+    outline: 2px solid #0077FF;
 }
 
 .note-card h3{
