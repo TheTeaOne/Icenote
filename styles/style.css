@@ -24,12 +24,12 @@ body{
     align-items: center;
     cursor: pointer;
     padding: 10px;
+    border-radius: 50%;
     transition: border-radius 0.3s ease, background-color 0.2s;
     color: white;
 }
 
 #burger:hover{
-    border-radius: 100px;
     background-color:#3a3a3a;
 }
 
@@ -96,11 +96,11 @@ body{
     padding: 10px;
     cursor: pointer;
     color: white;
+    border-radius: 50%;
     transition: border-radius 0.3s ease, background-color 0.2s;
 }
 
 #settings:hover{
-    border-radius: 100px;
     background-color:#3a3a3a;
 }
 
@@ -140,7 +140,7 @@ body{
     width: 48px;
     height: 48px;
     margin: 4px 12px;
-    border-radius: 50px;
+    border-radius: 50%;
     color: #C0C0C0;
     cursor: pointer;
     justify-content: flex-start;
@@ -195,13 +195,12 @@ main{
     display: flex;
     border-radius: 25px;
     outline: 3px solid #0958b3;
-    transition: outline 0.3s;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-start;
     gap: 10px;
-    transition: all 0.2s ease-in-out;
+    transition: outline-color 0.3s;
 }
 
 .create-note.active {
@@ -262,7 +261,7 @@ main{
     cursor: pointer;
     color: white;
     padding: 8px;
-    border-radius: 100px;
+    border-radius: 50%;
     transition: background-color 0.3s;
 }
 
@@ -275,8 +274,8 @@ main{
     display: flex;
     cursor: pointer;
     padding: 5px 15px;
-    border-radius: 8px;
-    transition: background-color 0,2s;
+    border-radius: 20px;
+    transition: border-radius 0.3s ease, background-color 0.2s;
     color: white;
     font-weight: 500;
     margin-left: auto;
@@ -312,16 +311,16 @@ main{
 .note-card{
     position: relative;
     background-color: #262626;
-    outline: 2px solid #0958b3;
+    outline: 3px solid #0958b3;
     border-radius: 20px;
     padding: 15px;
     color: white;
     word-wrap: break-word;
-    transition: outline 0.3s;
+    transition: outline-color 0.3s;
 }
 
 .note-card:hover{
-    outline: 2px solid #0077FF;
+    outline: 3px solid #0077FF;
 }
 
 .note-card h3{
@@ -345,6 +344,7 @@ main{
     right: 8px;
     cursor: pointer;
     opacity: 0;
+    border-radius: 50%;
     transition: opacity 0.2s, border-radius 0.3s ease, background-color 0.2s, color 0.3s;
     font-size: 1.2rem;
     padding: 4px;
@@ -357,7 +357,6 @@ main{
 }
 
 .deleteBtn:hover{
-    border-radius: 100px;
     background-color: #444;
     color: red;
 }
