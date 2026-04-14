@@ -9,6 +9,8 @@ const titleInput = document.querySelector('.title-input')
 
 const notesWrapper = document.getElementById('notesWrapper')
 
+let notes = JSON.parse(localStorage.getItem('notes')) || []
+
 burger.addEventListener("click", function() {
     sidebar.classList.toggle("open")
 })
@@ -37,13 +39,27 @@ document.addEventListener('click', function(event) {
     }
 })
 
+function saveNotes() {
+    localStorage.setItem('notes', JSON.stringify(notes))
+}
+function addNoteToArray (title, text){
+        const newNote = {
+            id: Date.now(),
+            title: title,
+            text: text
+        }
+        notes.push(newNote)
+        saveNotes()
+        return newNote
+    }
+
 if (createBtn){
     createBtn.addEventListener('click', function(){
         const title = titleInput ? titleInput.value : ''
-        const text = noteInput.value    
+        const text = noteInput.value
+        const createdNote = addNoteToArray(title, text)    
         if(text.trim()=== '') return
-        renderNote( title, text)
-        console.log("Note was Created", {title, text})
+        renderNote(createdNote.title, createdNote.text, createdNote.id)
 if(titleInput) titleInput.value = ''
         noteInput.value = ''
         noteContainer.classList.remove('active')
@@ -53,9 +69,10 @@ if(titleInput) titleInput.value = ''
     })
 }
 
-function renderNote(title, text){
+function renderNote(title, text, id){
     const card = document.createElement('div')
     card.classList.add('note-card')
+    card.dataset.id = id
     const deleteBtn = document.createElement('div')
     deleteBtn.classList.add('deleteBtn')
     deleteBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,6 +80,8 @@ function renderNote(title, text){
 </svg>`
     deleteBtn.addEventListener('click',function(event){
         event.stopPropagation()
+        notes = notes.filter(note => note.id !== id)
+        saveNotes()
         card.remove()
     })
 if(title){
@@ -76,3 +95,7 @@ const p = document.createElement('p')
     card.appendChild(deleteBtn)
     notesWrapper.prepend(card)
 }
+
+notes.forEach(function(note) {
+    renderNote(note.title, note.text, note.id)
+})
