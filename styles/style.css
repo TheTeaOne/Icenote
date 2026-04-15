@@ -335,8 +335,24 @@ main{
     white-space: pre-wrap;
 }
 
+.note-footer{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    min-height: 15px;
+    border-top: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.note-card:hover .note-footer{
+    border-top: 1px solid #3c4043;
+    opacity: 1;
+}
+
 .deleteBtn{
-    position: absolute;
     align-items: center;
     justify-content: center;
     display: flex;

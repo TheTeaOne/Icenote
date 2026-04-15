@@ -73,6 +73,8 @@ function renderNote(title, text, id){
     const card = document.createElement('div')
     card.classList.add('note-card')
     card.dataset.id = id
+    const footer = document.createElement('div')
+    footer.classList.add('note-footer')
     const deleteBtn = document.createElement('div')
     deleteBtn.classList.add('deleteBtn')
     deleteBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,6 +94,8 @@ if(title){
 const p = document.createElement('p')
     p.innerText = text
     card.appendChild(p)
+    footer.appendChild(deleteBtn)
+    card.appendChild(footer)
     card.appendChild(deleteBtn)
     notesWrapper.prepend(card)
 }
