@@ -298,6 +298,22 @@ main{
     margin-top: 5px;
 }
 
+.empty-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.empty-container.hidden{
+    display: none !important;
+}
+
+#empty{
+    color: #0958b3;
+    font-size: 25px;
+}
+
 .notes-grid{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

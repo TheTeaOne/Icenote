@@ -1,6 +1,7 @@
 const burger = document.getElementById("burger")
 const sidebar = document.querySelector(".sidebar")
 
+const searchInput = document.getElementById('searchInput')
 const noteContainer = document.getElementById('noteContainer')
 const noteInput = document.querySelector('.note-input')
 const titleBlock = document.getElementById('titleBlock')
@@ -8,6 +9,7 @@ const createBtn = document.getElementById('createBlock')
 const titleInput = document.querySelector('.title-input')
 
 const notesWrapper = document.getElementById('notesWrapper')
+const empty = document.querySelector('.empty-container')
 
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 
@@ -26,6 +28,30 @@ if (noteInput) {
         titleBlock.classList.remove('hidden')
         createBtn.classList.remove('hidden')
     })
+}
+
+if(searchInput){
+    searchInput.addEventListener('input',function(){
+        const filter = searchInput.value.toLowerCase()
+        const allCards = document.querySelectorAll('.note-card')
+        allCards.forEach(card => {
+            const title = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : ''
+            const text = card.querySelector('p').innerText.toLowerCase()
+        if(title.includes(filter) || text.includes(filter)){
+            card.style.display = ''
+        }else{
+            card.style.display = 'none'
+        }
+        })
+    })
+}
+
+function checkEmpty(){
+    if(notes.length > 0){
+        empty.classList.add('hidden')
+    }else{
+        empty.classList.remove('hidden')
+    }
 }
 
 document.addEventListener('click', function(event) {
@@ -66,6 +92,7 @@ if(titleInput) titleInput.value = ''
         titleBlock.classList.add('hidden')
         createBtn.classList.add('hidden')
         noteInput.style.height = 'auto'
+        checkEmpty()
     })
 }
 
@@ -85,6 +112,7 @@ function renderNote(title, text, id){
         notes = notes.filter(note => note.id !== id)
         saveNotes()
         card.remove()
+        checkEmpty()
     })
 if(title){
     const h3 = document.createElement('h3')
@@ -103,3 +131,4 @@ const p = document.createElement('p')
 notes.forEach(function(note) {
     renderNote(note.title, note.text, note.id)
 })
+    checkEmpty()
