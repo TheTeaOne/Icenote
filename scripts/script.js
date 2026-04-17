@@ -9,7 +9,14 @@ const createBtn = document.getElementById('createBlock')
 const titleInput = document.querySelector('.title-input')
 
 const notesWrapper = document.getElementById('notesWrapper')
-const empty = document.getElementById('empty-container')
+const empty = document.getElementById('emptyContainer')
+
+const modal = document.getElementById('noteModal')
+const modalTitle = document.getElementById('modalTitle')
+const modalText = document.getElementById('modalText')
+const saveBtn = document.getElementById('saveModal')
+
+let currentEditingId = null
 
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 
@@ -34,7 +41,7 @@ if(searchInput){
     searchInput.addEventListener('input',function(){
         const filter = searchInput.value.toLowerCase()
         const allCards = document.querySelectorAll('.note-card')
-        const noResultsMessage = document.getElementById('no-results')
+        const noResultsMessage = document.getElementById('noResults')
         let hasVisibleCards = false
         allCards.forEach(card => {
             const title = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : ''
@@ -106,10 +113,42 @@ if(titleInput) titleInput.value = ''
     })
 }
 
+function openModal(id){
+    const note = notes.find(n => n.id === id)
+if(note){
+        currentEditingId = id
+        modalTitle.value = note.title
+        modalText.value = note.text
+        modal.classList.remove('hidden')
+    }
+}
+
+saveBtn.addEventListener('click', function(){
+    if(currentEditingId !==  null){
+        const noteIndex = notes.findIndex(n => n.id === currentEditingId)
+        if(noteIndex !== -1){
+            notes[noteIndex].title = modalTitle.value
+            notes[noteIndex].text = modalText.value
+            saveNotes()
+            refreshNotes()
+        }
+    }
+    modal.classList.add('hidden')
+})
+
+function refreshNotes(){
+    notesWrapper.innerHTML = ''
+    notes.forEach(note => renderNote(note.title, note.text, note.id))
+    checkEmpty()
+}
+
 function renderNote(title, text, id){
     const card = document.createElement('div')
     card.classList.add('note-card')
     card.dataset.id = id
+    card.addEventListener('click', function(){
+        openModal(id)
+    })
     const footer = document.createElement('div')
     footer.classList.add('note-footer')
     const deleteBtn = document.createElement('div')

@@ -98,13 +98,22 @@
                                     </div>
                             </div>
                                 <div id="notesWrapper" class="notes-grid"></div>
-                                <div id="empty-container" class="hidden">
+                                <div id="emptyContainer" class="hidden">
                                 <span>Hier will be your notes</span>
                             </div>
-                            <div id="no-results" class="hidden">
+                            <div id="noResults" class="hidden">
                                 <span>No results</span>
                             </div>
                         </main>
+                    <div id="noteModal" class=" modal hidden">
+                        <div class="modal-content">
+                            <input type="text" id="modalTitle" class="modal-title" placeholder="Title">
+                            <textarea id="modalText" class="modal-text" placeholder="Text"></textarea>
+                            <div class="modal-footer">
+                                <span id="saveModal" class="modal-save-btn">Close</span>
+                            </div>
+                        </div>
+                    </div>
         <script src="scripts/script.js"></script>
     </body>
 </html>

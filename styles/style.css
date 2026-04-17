@@ -298,7 +298,7 @@ main{
     margin-top: 5px;
 }
 
-#empty-container{
+#emptyContainer{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -307,11 +307,11 @@ main{
     font-size: 25px;
 }
 
-#empty-container.hidden{
+#emptyContainer.hidden{
     display: none;
 }
 
-#no-results{
+#noResults{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -320,7 +320,7 @@ main{
     font-size: 25px;
 }
 
-#no-results.hidden{
+#noResults.hidden{
     display: none;
 }
 
@@ -401,4 +401,80 @@ main{
 .deleteBtn:hover{
     background-color: #444;
     color: red;
+}
+
+.modal{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+.modal-content{
+    background-color: #262626;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 25px;
+    outline: 3px solid #0958b3;
+    transition: outline-color 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.modal-content:hover{
+    outline:3px solid #0077FF;
+}
+
+.modal-title, .modal-text {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    display: block;
+}
+
+.modal-title{
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.modal-text{
+    font-size: 16px;
+    min-height: 150px;
+    resize: none;
+}
+
+.modal.hidden{
+    display: none !important;
+}
+
+.modal-footer{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.modal-save-btn{
+    display: flex;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: border-radius 0.3s ease, background-color 0.2s;
+    color: white;
+    font-weight: 500;
+    margin-left: auto;
+    align-items: center;
+
+}
+
+.modal-save-btn:hover{
+    background-color: #3a3a3a;
+    border-radius: 20px;
 }
