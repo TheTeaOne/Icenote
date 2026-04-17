@@ -298,20 +298,30 @@ main{
     margin-top: 5px;
 }
 
-.empty-container{
+#empty-container{
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 100px;
-}
-
-.empty-container.hidden{
-    display: none !important;
-}
-
-#empty{
     color: #0958b3;
     font-size: 25px;
+}
+
+#empty-container.hidden{
+    display: none;
+}
+
+#no-results{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    color: #0958b3;
+    font-size: 25px;
+}
+
+#no-results.hidden{
+    display: none;
 }
 
 .notes-grid{

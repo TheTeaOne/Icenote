@@ -9,7 +9,7 @@ const createBtn = document.getElementById('createBlock')
 const titleInput = document.querySelector('.title-input')
 
 const notesWrapper = document.getElementById('notesWrapper')
-const empty = document.querySelector('.empty-container')
+const empty = document.getElementById('empty-container')
 
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 
@@ -34,15 +34,25 @@ if(searchInput){
     searchInput.addEventListener('input',function(){
         const filter = searchInput.value.toLowerCase()
         const allCards = document.querySelectorAll('.note-card')
+        const noResultsMessage = document.getElementById('no-results')
+        let hasVisibleCards = false
         allCards.forEach(card => {
             const title = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : ''
             const text = card.querySelector('p').innerText.toLowerCase()
         if(title.includes(filter) || text.includes(filter)){
             card.style.display = ''
+            hasVisibleCards = true
         }else{
             card.style.display = 'none'
         }
         })
+        if(!hasVisibleCards && filter.length > 0){
+            noResultsMessage.classList.remove('hidden')
+            empty.classList.add('hidden')
+        }else{
+            noResultsMessage.classList.add('hidden')
+        if(filter.length === 0) checkEmpty()
+        }
     })
 }
 
