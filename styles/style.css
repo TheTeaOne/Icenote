@@ -324,9 +324,11 @@ main{
     display: none;
 }
 
-.notes-grid{
+#notesWrapper{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    align-items: flex-start;
     gap: 15px;
     padding: 20px;
     width: 100%;
@@ -335,13 +337,17 @@ main{
 }
 
 .note-card{
+    display: flex;
     position: relative;
+    flex-direction: column;
+    height: fit-content;
     background-color: #262626;
     outline: 3px solid #0958b3;
     border-radius: 20px;
-    padding: 15px;
+    padding: 15px 15px 3px 15px;
     color: white;
     word-wrap: break-word;
+    overflow: hidden;
     transition: outline-color 0.3s;
 }
 
@@ -359,18 +365,19 @@ main{
     font-size: 1rem;
     color: #ffffff;
     white-space: pre-wrap;
+    flex-grow: 1;
 }
 
 .note-footer{
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    height: 0;
+    height: 45px;
     opacity: 0;
-    overflow: hidden;
-    min-height: 15px;
+    
+    margin-top: 10px;
     border-top: 1px solid transparent;
-    transition: border-color 0.3s;
+    transition: opacity 0.3s, border-color 0.3s;
 }
 
 .note-card:hover .note-footer{
@@ -382,14 +389,11 @@ main{
     align-items: center;
     justify-content: center;
     display: flex;
-    bottom: 8px;
-    right: 8px;
     cursor: pointer;
-    opacity: 0;
     border-radius: 50%;
-    transition: opacity 0.2s, border-radius 0.3s ease, background-color 0.2s, color 0.3s;
+    transition: opacity 0.3s, border-radius 0.3s ease, background-color 0.3s, color 0.3s;
     font-size: 1.2rem;
-    padding: 4px;
+    padding: 2px;
     width: 32px;
     height: 32px;
 }

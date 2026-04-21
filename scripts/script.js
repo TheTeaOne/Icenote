@@ -173,7 +173,6 @@ const p = document.createElement('p')
     card.appendChild(p)
     footer.appendChild(deleteBtn)
     card.appendChild(footer)
-    card.appendChild(deleteBtn)
     notesWrapper.prepend(card)
 }
 
