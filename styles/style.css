@@ -324,16 +324,31 @@ main{
     display: none;
 }
 
-#notesWrapper{
+.section-title{
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    margin: 20px 0 10px 10px;
+    letter-spacing: 0.1rem;
+}
+
+.hidden{
+    display: none;
+}
+
+.notes-grid{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
     align-items: flex-start;
-    gap: 15px;
-    padding: 20px;
+    padding: 10px 20px;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+#pinnedSection, #other-Section {
+    margin-bottom: 40px;
 }
 
 .note-card{
@@ -345,6 +360,7 @@ main{
     outline: 3px solid #0958b3;
     border-radius: 20px;
     padding: 15px 15px 3px 15px;
+    margin-right: 25px;
     color: white;
     word-wrap: break-word;
     overflow: hidden;
@@ -366,6 +382,44 @@ main{
     color: #ffffff;
     white-space: pre-wrap;
     flex-grow: 1;
+}
+
+.pinBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 8px;
+    right: 8%;
+    width: 22px;
+    height: 22px;
+    z-index: 10;
+    opacity: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 5px;
+    transition: border-radius 0.3s ease, background-color 0.2s;
+}
+
+.pinBtn:hover{
+    background-color: #3c4043;
+}
+
+.note-card:hover .pinBtn {
+    opacity: 0.5;
+}
+
+.pinBtn:hover, .pinBtn.active {
+    opacity: 1;
+}
+
+.pinBtn:hover, 
+.pinBtn.active {
+    opacity: 1 !important; 
+}
+
+.pinBtn.active svg path{
+    fill: #ffffff;
 }
 
 .note-footer{

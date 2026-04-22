@@ -89,7 +89,8 @@ function addNoteToArray (title, text){
         const newNote = {
             id: Date.now(),
             title: title,
-            text: text
+            text: text,
+            isPinned: false
         }
         notes.push(newNote)
         saveNotes()
@@ -137,25 +138,53 @@ saveBtn.addEventListener('click', function(){
 })
 
 function refreshNotes(){
+    const pinnedWrapper = document.getElementById('pinnedWrapper')
+    const notesWrapper = document.getElementById('notesWrapper')
+    const pinnedSection = document.getElementById('pinnedSection')
+    const othersTitle = document.getElementById('othersTitle')
+    pinnedWrapper.innerHTML = ""
     notesWrapper.innerHTML = ''
-    notes.forEach(note => renderNote(note.title, note.text, note.id))
+    const pinnedNotes = notes.filter(n => n.isPinned)
+    const otherNotes = notes.filter(n => !n.isPinned)
+    pinnedNotes.forEach(note => renderNote(note, pinnedWrapper))
+    otherNotes.forEach(note => renderNote(note, notesWrapper))
+    if(pinnedNotes.length > 0){
+        pinnedSection.classList.remove('hidden')
+        othersTitle.classList.remove('hidden')
+    } else{
+        pinnedSection.classList.add('hidden')
+        othersTitle.classList.add('hidden')
+    }
     checkEmpty()
 }
 
-function renderNote(title, text, id){
+function renderNote(note, container){
+    const { title, text, id, isPinned} = note
     const card = document.createElement('div')
     card.classList.add('note-card')
     card.dataset.id = id
     card.addEventListener('click', function(){
         openModal(id)
     })
-    const footer = document.createElement('div')
-    footer.classList.add('note-footer')
-    const deleteBtn = document.createElement('div')
-    deleteBtn.classList.add('deleteBtn')
-    deleteBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+    const pinBtn = document.createElement('div')
+    pinBtn.classList.add('pinBtn')
+    pinBtn.innerHTML = `<svg width="17" height="20" viewBox="0 0 17 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 1V9.82353L1 15.7059V18.6471H16V15.7059L13 9.82353V1M8.5 18.6471V26M2.5 1H14.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`
+    if(note.isPinned) pinBtn.classList.add('active')
+        const footer = document.createElement('div')
+        footer.classList.add('note-footer')
+        const deleteBtn = document.createElement('div')
+        deleteBtn.classList.add('deleteBtn')
+        deleteBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M1 6.33333H25M10 11.6667V19.6667M16 11.6667V19.6667M2.5 6.33333L4 22.3333C4 23.0406 4.31607 23.7189 4.87868 24.219C5.44129 24.719 6.20435 25 7 25H19C19.7956 25 20.5587 24.719 21.1213 24.219C21.6839 23.7189 22 23.0406 22 22.3333L23.5 6.33333M8.5 6.33333V2.33333C8.5 1.97971 8.65804 1.64057 8.93934 1.39052C9.22064 1.14048 9.60218 1 10 1H16C16.3978 1 16.7794 1.14048 17.0607 1.39052C17.342 1.64057 17.5 1.97971 17.5 2.33333V6.33333" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`
+    pinBtn.addEventListener('click', function(e){
+            e.stopPropagation()
+            note.isPinned = !note.isPinned
+            saveNotes()
+            refreshNotes()
+    })
     deleteBtn.addEventListener('click',function(event){
         event.stopPropagation()
         notes = notes.filter(note => note.id !== id)
@@ -163,6 +192,7 @@ function renderNote(title, text, id){
         card.remove()
         checkEmpty()
     })
+        card.appendChild(pinBtn)
 if(title){
     const h3 = document.createElement('h3')
     h3.innerText = title
@@ -173,10 +203,6 @@ const p = document.createElement('p')
     card.appendChild(p)
     footer.appendChild(deleteBtn)
     card.appendChild(footer)
-    notesWrapper.prepend(card)
+    container.prepend(card)
 }
-
-notes.forEach(function(note) {
-    renderNote(note.title, note.text, note.id)
-})
-    checkEmpty()
+    refreshNotes()
