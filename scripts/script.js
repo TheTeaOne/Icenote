@@ -90,7 +90,14 @@ function addNoteToArray (title, text){
             id: Date.now(),
             title: title,
             text: text,
-            isPinned: false
+            isPinned: false,
+            createdAt: new Date().toLocaleString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+            
         }
         notes.push(newNote)
         saveNotes()
@@ -100,10 +107,10 @@ function addNoteToArray (title, text){
 if (createBtn){
     createBtn.addEventListener('click', function(){
         const title = titleInput ? titleInput.value : ''
-        const text = noteInput.value
-        const createdNote = addNoteToArray(title, text)    
+        const text = noteInput.value 
         if(text.trim()=== '') return
-        renderNote(createdNote.title, createdNote.text, createdNote.id)
+            addNoteToArray(title, text)
+            refreshNotes()
 if(titleInput) titleInput.value = ''
         noteInput.value = ''
         noteContainer.classList.remove('active')
@@ -121,6 +128,12 @@ if(note){
         modalTitle.value = note.title
         modalText.value = note.text
         modal.classList.remove('hidden')
+    const timestampElement = document.getElementById('modalTimestamp')
+        if(note.createdAt){
+            timestampElement.innerText = `Created: ${note.createdAt}`
+        }else {
+            timestampElement.innerText = ''
+        }
     }
 }
 

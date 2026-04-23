@@ -422,6 +422,16 @@ main{
     fill: #ffffff;
 }
 
+.modal-timestamp{
+    font-size: 0.75rem;
+    text-align: right;
+    color: white;
+    opacity: 0.5;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    font-weight: 500;
+}
+
 .note-footer{
     display: flex;
     justify-content: flex-end;
