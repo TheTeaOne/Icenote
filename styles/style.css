@@ -422,6 +422,23 @@ main{
     fill: #ffffff;
 }
 
+.restoreBtn{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: border-radius 0.3s ease, background-color 0.3s;
+    font-size: 1.2rem;
+    padding: 2px;
+    width: 32px;
+    height: 32px;
+}
+
+.restoreBtn:hover{
+    background-color: #3c4043;
+}
+
 .modal-timestamp{
     font-size: 0.75rem;
     text-align: right;
@@ -438,7 +455,6 @@ main{
     align-items: center;
     height: 45px;
     opacity: 0;
-    
     margin-top: 10px;
     border-top: 1px solid transparent;
     transition: opacity 0.3s, border-color 0.3s;
