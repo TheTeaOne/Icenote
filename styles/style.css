@@ -351,6 +351,10 @@ main{
     margin-bottom: 40px;
 }
 
+#notesContainer{
+    padding: 10px;
+}
+
 .note-card{
     display: flex;
     position: relative;

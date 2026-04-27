@@ -40,35 +40,31 @@ if (noteInput) {
 
 if(searchInput){
     searchInput.addEventListener('input',function(){
-        const filter = searchInput.value.toLowerCase()
-        const allCards = document.querySelectorAll('.note-card')
-        const noResultsMessage = document.getElementById('noResults')
-        let hasVisibleCards = false
-        allCards.forEach(card => {
-            const title = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : ''
-            const text = card.querySelector('p').innerText.toLowerCase()
-        if(title.includes(filter) || text.includes(filter)){
-            card.style.display = ''
-            hasVisibleCards = true
-        }else{
-            card.style.display = 'none'
-        }
+        refreshNotes()
         })
-        if(!hasVisibleCards && filter.length > 0){
-            noResultsMessage.classList.remove('hidden')
-            empty.classList.add('hidden')
-        }else{
-            noResultsMessage.classList.add('hidden')
-        if(filter.length === 0) checkEmpty()
-        }
-    })
-}
+    }
 
 function checkEmpty(){
-    if(notes.length > 0){
-        empty.classList.add('hidden')
-    }else{
-        empty.classList.remove('hidden')
+    const pinnedWrapper = document.getElementById('pinnedWrapper')
+    const notesWrapper = document.getElementById('notesWrapper')
+    const currentArray = isTrashMode ? trash : notes
+    const emptyText = document.getElementById('emptyText')
+    const searchValue = searchInput ? searchInput.value.trim() : ""
+    const hasNotes = pinnedWrapper.children.length > 0 || notesWrapper.children.length > 0
+
+    if (hasNotes) {
+        empty.classList.add('hidden');
+    } else {
+        empty.classList.remove('hidden');
+        if (emptyText) {
+            if (searchValue.length > 0) {
+                emptyText.innerText = "No Results found for your search";
+            } else if (isTrashMode) {
+                emptyText.innerText = "There is nothing in the basket";
+            } else {
+                emptyText.innerText = "Here will be your notes";
+            }
+        }
     }
 }
 
@@ -157,36 +153,50 @@ saveBtn.addEventListener('click', function(){
     modal.classList.add('hidden')
 })
 
-function refreshNotes(){
+function refreshNotes() {
     const pinnedWrapper = document.getElementById('pinnedWrapper')
     const notesWrapper = document.getElementById('notesWrapper')
     const pinnedSection = document.getElementById('pinnedSection')
     const othersTitle = document.getElementById('othersTitle')
     const noteContainer = document.getElementById('noteContainer')
-        pinnedWrapper.innerHTML = ""
-        notesWrapper.innerHTML = ''
-    if(!isTrashMode){
-        noteContainer.classList.remove('hidden')
+    const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : ""
 
-    const pinnedNotes = notes.filter(n => n.isPinned)
-    const otherNotes = notes.filter(n => !n.isPinned)
+    pinnedWrapper.innerHTML = ""
+    notesWrapper.innerHTML = ""
+
+    if (!isTrashMode) {
+        noteContainer.classList.remove('hidden')
+        const filteredNotes = notes.filter(n => 
+            n.title.toLowerCase().includes(searchValue) || 
+            n.text.toLowerCase().includes(searchValue)
+        )
+        const pinnedNotes = filteredNotes.filter(n => n.isPinned)
+        const otherNotes = filteredNotes.filter(n => !n.isPinned)
         pinnedNotes.forEach(note => renderNote(note, pinnedWrapper))
         otherNotes.forEach(note => renderNote(note, notesWrapper))
-    if(pinnedNotes.length > 0){
-        pinnedSection.classList.remove('hidden')
-        othersTitle.classList.remove('hidden')
-    } else{
-        pinnedSection.classList.add('hidden')
-        othersTitle.classList.add('hidden')
-    }
-}   else{
+        if (pinnedNotes.length > 0) {
+            pinnedSection.classList.remove('hidden')
+        } else {
+            pinnedSection.classList.add('hidden')
+        }
+        if (pinnedNotes.length > 0 && otherNotes.length > 0 && searchValue === "") {
+            othersTitle.classList.remove('hidden')
+        } else {
+            othersTitle.classList.add('hidden')
+        }
+    } else {
         noteContainer.classList.add('hidden')
         pinnedSection.classList.add('hidden')
         othersTitle.classList.add('hidden')
-        trash.forEach(note => renderNote(note, notesWrapper))
+        const filteredTrash = trash.filter(n =>
+            n.title.toLowerCase().includes(searchValue) ||
+            n.text.toLowerCase().includes(searchValue)
+        )
+        filteredTrash.forEach(note => renderNote(note, notesWrapper))
     }
     checkEmpty()
 }
+
 
 function renderNote(note, container){
     const { title, text, id, isPinned} = note
