@@ -21,6 +21,7 @@ let currentEditingId = null
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 let trash = JSON.parse(localStorage.getItem('trash')) || []
 let isTrashMode = false
+
 burger.addEventListener("click", function() {
     sidebar.classList.toggle("open")
 })
@@ -71,6 +72,14 @@ function checkEmpty(){
 document.getElementById('openTrash').addEventListener('click', function(){
     isTrashMode = !isTrashMode
     refreshNotes()
+})
+
+document.getElementById('cleanBtn').addEventListener('click', function(){
+    if(confirm ("Are you sure you want to empty the basket?")) {
+        trash = []
+        saveNotes()
+        refreshNotes()
+    }
 })
 
 document.addEventListener('click', function(event) {
@@ -159,11 +168,12 @@ function refreshNotes() {
     const pinnedSection = document.getElementById('pinnedSection')
     const othersTitle = document.getElementById('othersTitle')
     const noteContainer = document.getElementById('noteContainer')
+    const cleanBtn = document.getElementById('cleanBtn')
     const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : ""
 
     pinnedWrapper.innerHTML = ""
     notesWrapper.innerHTML = ""
-
+    cleanBtn.classList.add('hidden')
     if (!isTrashMode) {
         noteContainer.classList.remove('hidden')
         const filteredNotes = notes.filter(n => 
@@ -192,8 +202,11 @@ function refreshNotes() {
             n.title.toLowerCase().includes(searchValue) ||
             n.text.toLowerCase().includes(searchValue)
         )
-        filteredTrash.forEach(note => renderNote(note, notesWrapper))
-    }
+            filteredTrash.forEach(note => renderNote(note, notesWrapper))
+        if(filteredTrash.length > 0){
+            cleanBtn.classList.remove('hidden')
+        }
+    } 
     checkEmpty()
 }
 
