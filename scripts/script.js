@@ -18,6 +18,9 @@ const saveBtn = document.getElementById('saveModal')
 
 let currentEditingId = null
 
+const openNote = document.getElementById('openNote')
+const openTrash = document.getElementById('openTrash')
+
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 let trash = JSON.parse(localStorage.getItem('trash')) || []
 let isTrashMode = false
@@ -69,8 +72,23 @@ function checkEmpty(){
     }
 }
 
-document.getElementById('openTrash').addEventListener('click', function(){
-    isTrashMode = !isTrashMode
+function  updateActiveTab(clickElement) {
+    const currentActive = document.querySelector('.sidebar-item.active')
+    if (currentActive){
+        currentActive.classList.remove('active')
+    }
+    clickElement.classList.add('active')
+}
+
+openNote.addEventListener('click', function(){
+    isTrashMode = false
+    updateActiveTab(this)
+    refreshNotes()
+})
+
+openTrash.addEventListener('click', function(){
+    isTrashMode = true
+    updateActiveTab(this)
     refreshNotes()
 })
 
