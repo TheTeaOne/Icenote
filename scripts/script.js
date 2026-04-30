@@ -20,10 +20,13 @@ let currentEditingId = null
 
 const openNote = document.getElementById('openNote')
 const openTrash = document.getElementById('openTrash')
+const openArchive = document.getElementById('openArchive')
 
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 let trash = JSON.parse(localStorage.getItem('trash')) || []
+let archive = JSON.parse(localStorage.getItem('archive')) || []
 let isTrashMode = false
+let isArchiveMode = false
 
 burger.addEventListener("click", function() {
     sidebar.classList.toggle("open")
@@ -65,6 +68,8 @@ function checkEmpty(){
                 emptyText.innerText = "No Results found for your search";
             } else if (isTrashMode) {
                 emptyText.innerText = "There is nothing in the basket";
+            } else if(isArchiveMode){
+                emptyText.innerText = "Archived notes will be stored here"
             } else {
                 emptyText.innerText = "Here will be your notes";
             }
@@ -82,12 +87,21 @@ function  updateActiveTab(clickElement) {
 
 openNote.addEventListener('click', function(){
     isTrashMode = false
+    isArchiveMode = false
     updateActiveTab(this)
     refreshNotes()
 })
 
 openTrash.addEventListener('click', function(){
     isTrashMode = true
+    isArchiveMode = false
+    updateActiveTab(this)
+    refreshNotes()
+})
+
+openArchive.addEventListener('click', function(){
+    isArchiveMode = true
+    isTrashMode = false
     updateActiveTab(this)
     refreshNotes()
 })
@@ -114,6 +128,7 @@ document.addEventListener('click', function(event) {
 function saveNotes() {
     localStorage.setItem('notes', JSON.stringify(notes))
     localStorage.setItem('trash', JSON.stringify(trash))
+    localStorage.setItem('archive', JSON.stringify(archive))
 }
 function addNoteToArray (title, text){
         const newNote = {
@@ -191,40 +206,49 @@ function refreshNotes() {
 
     pinnedWrapper.innerHTML = ""
     notesWrapper.innerHTML = ""
+    
     cleanBtn.classList.add('hidden')
-    if (!isTrashMode) {
-        noteContainer.classList.remove('hidden')
-        const filteredNotes = notes.filter(n => 
+    noteContainer.classList.add('hidden')
+    pinnedSection.classList.add('hidden')
+    othersTitle.classList.add('hidden')
+
+    if (isTrashMode) {
+        const filteredTrash = trash.filter(n =>  
             n.title.toLowerCase().includes(searchValue) || 
             n.text.toLowerCase().includes(searchValue)
         )
+        filteredTrash.forEach(note => renderNote(note, notesWrapper))
+        
+        if(filteredTrash.length > 0){
+            cleanBtn.classList.remove('hidden')
+        } 
+    }else if (isArchiveMode){
+            const filteredArchive = archive.filter(n => 
+            n.title.toLowerCase().includes(searchValue) || 
+            n.text.toLowerCase().includes(searchValue)
+        )
+            filteredArchive.forEach(note => renderNote(note, notesWrapper))
+        }else{
+            noteContainer.classList.remove('hidden')
+            
+            const filteredNotes = notes.filter(n => 
+            n.title.toLowerCase().includes(searchValue) || 
+            n.text.toLowerCase().includes(searchValue)
+        )
+
         const pinnedNotes = filteredNotes.filter(n => n.isPinned)
         const otherNotes = filteredNotes.filter(n => !n.isPinned)
+        
         pinnedNotes.forEach(note => renderNote(note, pinnedWrapper))
         otherNotes.forEach(note => renderNote(note, notesWrapper))
+
         if (pinnedNotes.length > 0) {
             pinnedSection.classList.remove('hidden')
-        } else {
-            pinnedSection.classList.add('hidden')
         }
         if (pinnedNotes.length > 0 && otherNotes.length > 0 && searchValue === "") {
             othersTitle.classList.remove('hidden')
-        } else {
-            othersTitle.classList.add('hidden')
         }
-    } else {
-        noteContainer.classList.add('hidden')
-        pinnedSection.classList.add('hidden')
-        othersTitle.classList.add('hidden')
-        const filteredTrash = trash.filter(n =>
-            n.title.toLowerCase().includes(searchValue) ||
-            n.text.toLowerCase().includes(searchValue)
-        )
-            filteredTrash.forEach(note => renderNote(note, notesWrapper))
-        if(filteredTrash.length > 0){
-            cleanBtn.classList.remove('hidden')
-        }
-    } 
+    }
     checkEmpty()
 }
 
