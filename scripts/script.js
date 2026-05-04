@@ -65,13 +65,13 @@ function checkEmpty(){
         empty.classList.remove('hidden');
         if (emptyText) {
             if (searchValue.length > 0) {
-                emptyText.innerText = "No Results found for your search";
+                emptyText.innerText = "No Results found for your search"
             } else if (isTrashMode) {
-                emptyText.innerText = "There is nothing in the basket";
+                emptyText.innerText = "There is nothing in the basket"
             } else if(isArchiveMode){
                 emptyText.innerText = "Archived notes will be stored here"
             } else {
-                emptyText.innerText = "Here will be your notes";
+                emptyText.innerText = "Here will be your notes"
             }
         }
     }
@@ -79,8 +79,10 @@ function checkEmpty(){
 
 function  updateActiveTab(clickElement) {
     const currentActive = document.querySelector('.sidebar-item.active')
+    const headerName = document.getElementById('headerName')        
     if (currentActive){
         currentActive.classList.remove('active')
+
     }
     clickElement.classList.add('active')
 }
@@ -88,6 +90,7 @@ function  updateActiveTab(clickElement) {
 openNote.addEventListener('click', function(){
     isTrashMode = false
     isArchiveMode = false
+    headerName.innerText = 'IceNote'
     updateActiveTab(this)
     refreshNotes()
 })
@@ -95,6 +98,7 @@ openNote.addEventListener('click', function(){
 openTrash.addEventListener('click', function(){
     isTrashMode = true
     isArchiveMode = false
+    headerName.innerText = 'Trash'
     updateActiveTab(this)
     refreshNotes()
 })
@@ -102,6 +106,7 @@ openTrash.addEventListener('click', function(){
 openArchive.addEventListener('click', function(){
     isArchiveMode = true
     isTrashMode = false
+    headerName.innerText = 'Archive'
     updateActiveTab(this)
     refreshNotes()
 })
