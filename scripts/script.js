@@ -21,12 +21,15 @@ let currentEditingId = null
 const openNote = document.getElementById('openNote')
 const openTrash = document.getElementById('openTrash')
 const openArchive = document.getElementById('openArchive')
+const openRemind = document.getElementById('openRemind')
 
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 let trash = JSON.parse(localStorage.getItem('trash')) || []
 let archive = JSON.parse(localStorage.getItem('archive')) || []
+let remind = JSON.parse(localStorage.getItem('remind')) || []
 let isTrashMode = false
 let isArchiveMode = false
+let isRemindMode = false
 
 burger.addEventListener("click", function() {
     sidebar.classList.toggle("open")
@@ -70,6 +73,8 @@ function checkEmpty(){
                 emptyText.innerText = "There is nothing in the basket"
             } else if(isArchiveMode){
                 emptyText.innerText = "Archived notes will be stored here"
+            } else if(isRemindMode){
+                emptyText.innerText = "There will be notes with reminders here"
             } else {
                 emptyText.innerText = "Here will be your notes"
             }
@@ -90,6 +95,7 @@ function  updateActiveTab(clickElement) {
 openNote.addEventListener('click', function(){
     isTrashMode = false
     isArchiveMode = false
+    isRemindMode = false
     headerName.innerText = 'IceNote'
     updateActiveTab(this)
     refreshNotes()
@@ -98,6 +104,7 @@ openNote.addEventListener('click', function(){
 openTrash.addEventListener('click', function(){
     isTrashMode = true
     isArchiveMode = false
+    isRemindMode = false
     headerName.innerText = 'Trash'
     updateActiveTab(this)
     refreshNotes()
@@ -106,7 +113,17 @@ openTrash.addEventListener('click', function(){
 openArchive.addEventListener('click', function(){
     isArchiveMode = true
     isTrashMode = false
+    isRemindMode = false
     headerName.innerText = 'Archive'
+    updateActiveTab(this)
+    refreshNotes()
+})
+
+openRemind.addEventListener('click', function(){
+    isRemindMode = true
+    isTrashMode = false
+    isArchiveMode = false
+    headerName.innerText = "Remind"
     updateActiveTab(this)
     refreshNotes()
 })
@@ -134,6 +151,7 @@ function saveNotes() {
     localStorage.setItem('notes', JSON.stringify(notes))
     localStorage.setItem('trash', JSON.stringify(trash))
     localStorage.setItem('archive', JSON.stringify(archive))
+    localStorage.setItem('remind', JSON.stringify(remind))
 }
 function addNoteToArray (title, text){
         const newNote = {
@@ -141,6 +159,7 @@ function addNoteToArray (title, text){
             title: title,
             text: text,
             isPinned: false,
+            reminder: null,
             createdAt: new Date().toLocaleString('en-GB', {
                 day: 'numeric',
                 month: 'short',
@@ -153,6 +172,63 @@ function addNoteToArray (title, text){
         saveNotes()
         return newNote
     }
+
+    function openModal(id){
+        const note = notes.find(n => n.id === id)
+    if(note){
+            currentEditingId = id
+            modalTitle.value = note.title
+            modalText.value = note.text
+
+            const modalReminder = document.getElementById('modalReminder')
+            if(modalReminder){
+                modalReminder.value = note.reminder || ""
+            }
+            modal.classList.remove('hidden')
+        const timestampElement = document.getElementById('modalTimestamp')
+            if(note.createdAt){
+                timestampElement.innerText = `Created: ${note.createdAt}`
+            }else {
+                timestampElement.innerText = ''
+            }
+        }
+    }
+    
+    const modalReminder = document.getElementById('modalReminder')
+    if (modalReminder){
+        modalReminder.addEventListener('change', function(){
+            if(currentEditingId !== null){
+                const noteIndex = notes.findIndex(n => n.id === currentEditingId)
+                if(noteIndex !== -1){
+                    notes[noteIndex].reminder = modalReminder.value || null
+                    saveNotes()
+                    refreshNotes()
+                }
+            }
+        })
+    }
+
+
+    saveBtn.addEventListener('click', function(){
+        if(currentEditingId !==  null){
+            const noteIndex = notes.findIndex(n => n.id === currentEditingId)
+            if(noteIndex !== -1){
+                notes[noteIndex].title = modalTitle.value
+                notes[noteIndex].text = modalText.value
+                const modalReminder = document.getElementById('modalReminder')
+                if(modalReminder){
+                    if(modalReminder.value !== ""){
+                        notes[noteIndex].reminder = modalReminder.value
+                    }else{
+                        notes[noteIndex].reminder = null
+                    }
+                }
+                saveNotes()
+                refreshNotes()
+            }
+        }
+        modal.classList.add('hidden')
+    })
 
 if (createBtn){
     createBtn.addEventListener('click', function(){
@@ -170,35 +246,6 @@ if(titleInput) titleInput.value = ''
         checkEmpty()
     })
 }
-
-function openModal(id){
-    const note = notes.find(n => n.id === id)
-if(note){
-        currentEditingId = id
-        modalTitle.value = note.title
-        modalText.value = note.text
-        modal.classList.remove('hidden')
-    const timestampElement = document.getElementById('modalTimestamp')
-        if(note.createdAt){
-            timestampElement.innerText = `Created: ${note.createdAt}`
-        }else {
-            timestampElement.innerText = ''
-        }
-    }
-}
-
-saveBtn.addEventListener('click', function(){
-    if(currentEditingId !==  null){
-        const noteIndex = notes.findIndex(n => n.id === currentEditingId)
-        if(noteIndex !== -1){
-            notes[noteIndex].title = modalTitle.value
-            notes[noteIndex].text = modalText.value
-            saveNotes()
-            refreshNotes()
-        }
-    }
-    modal.classList.add('hidden')
-})
 
 function refreshNotes() {
     const pinnedWrapper = document.getElementById('pinnedWrapper')
@@ -233,7 +280,13 @@ function refreshNotes() {
             n.text.toLowerCase().includes(searchValue)
         )
             filteredArchive.forEach(note => renderNote(note, notesWrapper))
-        }else{
+        } else if(isRemindMode){
+            noteContainer.classList.remove('hidden')
+            const filteredRemind = notes.filter( n => 
+            (n.title.toLowerCase().includes(searchValue) || n.text.toLowerCase().includes(searchInput)) && n.reminder
+            )
+            filteredRemind.forEach(note => renderNote(note, notesWrapper))
+        } else{
             noteContainer.classList.remove('hidden')
             
             const filteredNotes = notes.filter(n => 
@@ -342,7 +395,7 @@ function renderNote(note, container){
 
     archiveBtn.addEventListener('click', function(event) {
         event.stopPropagation()
-        
+
         if (isArchiveMode) {
             const noteToRestore = archive.find(n => n.id === id)
             if (noteToRestore) {

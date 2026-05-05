@@ -44,7 +44,7 @@
                                     </div>
                                     <span class="sidebar-label">Note</span>
                                 </li>
-                                <li class="sidebar-item">
+                                <li id="openRemind" class="sidebar-item">
                                     <div class="sidebar-icon">
                                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8.5001 19.6667V21C8.5001 22.0609 8.9742 23.0783 9.81812 23.8284C10.662 24.5786 11.8066 25 13.0001 25C14.1936 25 15.3382 24.5786 16.1821 23.8284C17.026 23.0783 17.5001 22.0609 17.5001 21V19.6667M10.0001 3.66667C10.0001 2.95942 10.3162 2.28115 10.8788 1.78105C11.4414 1.28095 12.2044 1 13.0001 1C13.7957 1 14.5588 1.28095 15.1214 1.78105C15.684 2.28115 16.0001 2.95942 16.0001 3.66667C17.7227 4.3907 19.1912 5.51777 20.2482 6.92707C21.3051 8.33636 21.9108 9.97476 22.0001 11.6667V15.6667C22.113 16.4956 22.4432 17.2894 22.9643 17.9842C23.4854 18.6789 24.1827 19.2552 25.0001 19.6667H1.0001C1.81751 19.2552 2.51481 18.6789 3.03588 17.9842C3.55695 17.2894 3.88721 16.4956 4.0001 15.6667V11.6667C4.08944 9.97476 4.69505 8.33636 5.75202 6.92707C6.80899 5.51777 8.27748 4.3907 10.0001 3.66667Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -118,6 +118,7 @@
                         <div class="modal-content">
                             <input type="text" id="modalTitle" class="modal-title" placeholder="Title">
                             <textarea id="modalText" class="modal-text" placeholder="Text"></textarea>
+                            <input type="datetime-local" id="modalReminder" class="modal-input">
                             <div id="modalTimestamp" class="modal-timestamp"></div>
                             <div class="modal-footer">
                                 <span id="saveModal" class="modal-save-btn">Close</span>

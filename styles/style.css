@@ -580,6 +580,14 @@ main{
     resize: none;
 }
 
+.modal-remind{
+    margin-top: 10px;
+    width: 80%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #3c4043 ;
+}
+
 .modal.hidden{
     display: none !important;
 }
