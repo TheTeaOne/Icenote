@@ -110,7 +110,7 @@
                                     <h4 id="othersTitle" class="section-title hidden">Other</h4>
                                     <div id="notesWrapper" class="notes-grid"></div>
                                     <div id="emptyContainer" class="hidden">
-                                    <span id="emptyText">Hier will be your notes</span>
+                                    <span id="emptyText">Here will be your notes</span>
                             </div>
                             </div>
                         </main>
@@ -118,8 +118,10 @@
                         <div class="modal-content">
                             <input type="text" id="modalTitle" class="modal-title" placeholder="Title">
                             <textarea id="modalText" class="modal-text" placeholder="Text"></textarea>
-                            <input type="datetime-local" id="modalReminder" class="modal-input">
-                            <div id="modalTimestamp" class="modal-timestamp"></div>
+                            <div class="modal-info">
+                                <input type="datetime-local" id="modalReminder" class="modal-input">
+                                <span id="modalTimestamp" class="modal-timestamp"></span>
+                            </div>
                             <div class="modal-footer">
                                 <span id="saveModal" class="modal-save-btn">Close</span>
                             </div>

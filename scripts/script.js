@@ -283,7 +283,7 @@ function refreshNotes() {
         } else if(isRemindMode){
             noteContainer.classList.remove('hidden')
             const filteredRemind = notes.filter( n => 
-            (n.title.toLowerCase().includes(searchValue) || n.text.toLowerCase().includes(searchInput)) && n.reminder
+            (n.title.toLowerCase().includes(searchValue) || n.text.toLowerCase().includes(searchValue)) && n.reminder
             )
             filteredRemind.forEach(note => renderNote(note, notesWrapper))
         } else{
