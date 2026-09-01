@@ -26,10 +26,8 @@ const openRemind = document.getElementById('openRemind')
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 let trash = JSON.parse(localStorage.getItem('trash')) || []
 let archive = JSON.parse(localStorage.getItem('archive')) || []
-let remind = JSON.parse(localStorage.getItem('remind')) || []
 let isTrashMode = false
 let isArchiveMode = false
-let isRemindMode = false
 
 burger.addEventListener("click", function() {
     sidebar.classList.toggle("open")
@@ -73,8 +71,6 @@ function checkEmpty(){
                 emptyText.innerText = "There is nothing in the basket"
             } else if(isArchiveMode){
                 emptyText.innerText = "Archived notes will be stored here"
-            } else if(isRemindMode){
-                emptyText.innerText = "There will be notes with reminders here"
             } else {
                 emptyText.innerText = "Here will be your notes"
             }
@@ -95,7 +91,6 @@ function  updateActiveTab(clickElement) {
 openNote.addEventListener('click', function(){
     isTrashMode = false
     isArchiveMode = false
-    isRemindMode = false
     headerName.innerText = 'IceNote'
     updateActiveTab(this)
     refreshNotes()
@@ -104,7 +99,6 @@ openNote.addEventListener('click', function(){
 openTrash.addEventListener('click', function(){
     isTrashMode = true
     isArchiveMode = false
-    isRemindMode = false
     headerName.innerText = 'Trash'
     updateActiveTab(this)
     refreshNotes()
@@ -113,17 +107,7 @@ openTrash.addEventListener('click', function(){
 openArchive.addEventListener('click', function(){
     isArchiveMode = true
     isTrashMode = false
-    isRemindMode = false
     headerName.innerText = 'Archive'
-    updateActiveTab(this)
-    refreshNotes()
-})
-
-openRemind.addEventListener('click', function(){
-    isRemindMode = true
-    isTrashMode = false
-    isArchiveMode = false
-    headerName.innerText = "Remind"
     updateActiveTab(this)
     refreshNotes()
 })
@@ -151,7 +135,6 @@ function saveNotes() {
     localStorage.setItem('notes', JSON.stringify(notes))
     localStorage.setItem('trash', JSON.stringify(trash))
     localStorage.setItem('archive', JSON.stringify(archive))
-    localStorage.setItem('remind', JSON.stringify(remind))
 }
 function addNoteToArray (title, text){
         const newNote = {
@@ -194,19 +177,6 @@ function addNoteToArray (title, text){
         }
     }
     
-    const modalReminder = document.getElementById('modalReminder')
-    if (modalReminder){
-        modalReminder.addEventListener('change', function(){
-            if(currentEditingId !== null){
-                const noteIndex = notes.findIndex(n => n.id === currentEditingId)
-                if(noteIndex !== -1){
-                    notes[noteIndex].reminder = modalReminder.value || null
-                    saveNotes()
-                    refreshNotes()
-                }
-            }
-        })
-    }
 
 
     saveBtn.addEventListener('click', function(){
@@ -215,14 +185,6 @@ function addNoteToArray (title, text){
             if(noteIndex !== -1){
                 notes[noteIndex].title = modalTitle.value
                 notes[noteIndex].text = modalText.value
-                const modalReminder = document.getElementById('modalReminder')
-                if(modalReminder){
-                    if(modalReminder.value !== ""){
-                        notes[noteIndex].reminder = modalReminder.value
-                    }else{
-                        notes[noteIndex].reminder = null
-                    }
-                }
                 saveNotes()
                 refreshNotes()
             }
@@ -280,12 +242,7 @@ function refreshNotes() {
             n.text.toLowerCase().includes(searchValue)
         )
             filteredArchive.forEach(note => renderNote(note, notesWrapper))
-        } else if(isRemindMode){
-            noteContainer.classList.remove('hidden')
-            const filteredRemind = notes.filter( n => 
-            (n.title.toLowerCase().includes(searchValue) || n.text.toLowerCase().includes(searchValue)) && n.reminder
-            )
-            filteredRemind.forEach(note => renderNote(note, notesWrapper))
+
         } else{
             noteContainer.classList.remove('hidden')
             

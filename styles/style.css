@@ -90,17 +90,17 @@ body{
     background-color: #444;
 }
 
-#settings{
+.themeMode{
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
     color: white;
     border-radius: 50%;
     transition: border-radius 0.3s ease, background-color 0.2s;
 }
 
-#settings:hover{
+.themeMode:hover{
     background-color:#3a3a3a;
 }
 
@@ -364,7 +364,6 @@ main{
     outline: 3px solid #0958b3;
     border-radius: 20px;
     padding: 15px 15px 3px 15px;
-    margin-right: 25px;
     color: white;
     word-wrap: break-word;
     overflow: hidden;
@@ -580,17 +579,9 @@ main{
     resize: none;
 }
 
-.modal-info{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: 10px;
-}
-
 #modalTimestamp{
     color: #aaa;
-    font-size: 14px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     height: 40px;
