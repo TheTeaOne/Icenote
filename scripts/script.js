@@ -1,3 +1,7 @@
+marked.use({
+    gfm: true,
+    breaks: true
+})
 const burger = document.getElementById("burger")
 const sidebar = document.querySelector(".sidebar")
 
@@ -378,9 +382,11 @@ function renderNote(note, container){
         card.appendChild(h3)
     }
     
-    const p = document.createElement('p')
-    p.innerText = text
-    card.appendChild(p)
+    const contentDiv = document.createElement('div')
+    contentDiv.className = 'note-text'
+    contentDiv.innerHTML = marked.parse(text || []
+    )
+    card.appendChild(contentDiv)
     if (!isTrashMode) {
         footer.appendChild(archiveBtn)
     }
