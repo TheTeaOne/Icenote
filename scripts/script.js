@@ -20,6 +20,9 @@ const modalTitle = document.getElementById('modalTitle')
 const modalText = document.getElementById('modalText')
 const saveBtn = document.getElementById('saveModal')
 
+const viewToggleBtn = document.querySelector('.viewMode')
+const notesContainer = document.getElementById('notesContainer')
+
 let currentEditingId = null
 
 const openNote = document.getElementById('openNote')
@@ -401,3 +404,17 @@ function renderNote(note, container){
     }
 }
 refreshNotes()
+
+
+const gridIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+</svg>`
+
+const listIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 10.635q-.691 0-1.153-.463T4 9.019V5.616q0-.691.463-1.153T5.616 4h12.769q.69 0 1.153.463T20 5.616v3.403q0 .69-.462 1.153t-1.153.463zm0-1h12.769q.269 0 .442-.173T19 9.019V5.616q0-.27-.173-.443T18.385 5H5.615q-.269 0-.442.173T5 5.616v3.403q0 .27.173.443t.443.173m0 10.365q-.691 0-1.153-.462T4 18.384V15q0-.69.463-1.153t1.153-.462h12.769q.69 0 1.153.462T20 15v3.385q0 .69-.462 1.152T18.384 20zm0-1h12.769q.269 0 .442-.173t.173-.442V15q0-.27-.173-.442q-.173-.173-.442-.173H5.615q-.269 0-.442.173T5 15v3.385q0 .269.173.442t.443.173M5 9.635V5zM5 19v-4.615z"/></svg>`
+let isListView = false
+
+viewToggleBtn.addEventListener('click', () => {
+    notesContainer.classList.toggle('list-view')
+    isListView = notesContainer.classList.contains('list-view')
+    viewToggleBtn.innerHTML = isListView? gridIcon: listIcon
+})
