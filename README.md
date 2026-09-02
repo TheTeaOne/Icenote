@@ -25,8 +25,8 @@ Since this is a client-side application, you don't need to install any dependenc
 * **SVG Graphics**: Lightweight, built-in icons for instant loading.
 
 ## 📅 Roadmap
-- [ ] **Local Storage**: Implementing persistent data storage on the device.
-- [ ] **Markdown Support**: Adding basic text formatting (Obsidian style).
+- [x] **Local Storage**: Implementing persistent data storage on the device.
+- [x] **Markdown Support**: Adding basic text formatting (Obsidian style).
 - [ ] **Private Sections**: Ability to hide or lock specific notes.
 - [ ] **Import/Export**: Ensuring you can take your data with you anytime.
 
