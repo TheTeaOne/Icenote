@@ -8,6 +8,17 @@ html, body{
 body{
     display: flex;
     flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+#headerName, .sidebar,
+.section-title, #othersTitle{
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+}
+
+textarea, input {
+    font-family: inherit;
 }
 
 .headerBar{
