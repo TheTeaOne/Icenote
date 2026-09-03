@@ -287,7 +287,7 @@ function renderNote(note, container){
     const pinBtn = document.createElement('div')
     pinBtn.classList.add('pinBtn')
     pinBtn.innerHTML = `<svg width="17" height="20" viewBox="0 0 17 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4 1V9.82353L1 15.7059V18.6471H16V15.7059V18.6471H16V15.7059L13 9.82353V1M8.5 18.6471V26M2.5 1H14.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4 1V9.82353L1 15.7059V18.6471H16V15.7059V18.6471H16V15.7059L13 9.82353V1M8.5 18.6471V26M2.5 1H14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`
     
     if(note.isPinned) pinBtn.classList.add('active')
@@ -418,3 +418,16 @@ viewToggleBtn.addEventListener('click', () => {
     isListView = notesContainer.classList.contains('list-view')
     viewToggleBtn.innerHTML = isListView? gridIcon: listIcon
 })
+
+const themeMode = document.querySelector('.themeMode')
+const savedTheme = localStorage.getItem('theme')
+if(savedTheme === 'light'){
+    document.body.classList.toggle('light-theme')
+}
+if(themeMode){
+themeMode.addEventListener('click', () =>{
+    document.body.classList.toggle('light-theme')
+    const isLight = document.body.classList.contains('light-theme')
+    localStorage.setItem('theme', isLight ? 'light': 'dark')
+})
+}
