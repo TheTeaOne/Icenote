@@ -30,9 +30,13 @@
                     </div>
                 </div>    
             <div class="header-right">
-                <div class="viewMode">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 10.635q-.691 0-1.153-.463T4 9.019V5.616q0-.691.463-1.153T5.616 4h12.769q.69 0 1.153.463T20 5.616v3.403q0 .69-.462 1.153t-1.153.463zm0-1h12.769q.269 0 .442-.173T19 9.019V5.616q0-.27-.173-.443T18.385 5H5.615q-.269 0-.442.173T5 5.616v3.403q0 .27.173.443t.443.173m0 10.365q-.691 0-1.153-.462T4 18.384V15q0-.69.463-1.153t1.153-.462h12.769q.69 0 1.153.462T20 15v3.385q0 .69-.462 1.152T18.384 20zm0-1h12.769q.269 0 .442-.173t.173-.442V15q0-.27-.173-.442q-.173-.173-.442-.173H5.615q-.269 0-.442.173T5 15v3.385q0 .269.173.442t.443.173M5 9.635V5zM5 19v-4.615z"/>
-                    </svg>
+                <div class="viewMode" title="Switch view">
+                    <div class="list-view-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 10.635q-.691 0-1.153-.463T4 9.019V5.616q0-.691.463-1.153T5.616 4h12.769q.69 0 1.153.463T20 5.616v3.403q0 .69-.462 1.153t-1.153.463zm0-1h12.769q.269 0 .442-.173T19 9.019V5.616q0-.27-.173-.443T18.385 5H5.615q-.269 0-.442.173T5 5.616v3.403q0 .27.173.443t.443.173m0 10.365q-.691 0-1.153-.462T4 18.384V15q0-.69.463-1.153t1.153-.462h12.769q.69 0 1.153.462T20 15v3.385q0 .69-.462 1.152T18.384 20zm0-1h12.769q.269 0 .442-.173t.173-.442V15q0-.27-.173-.442q-.173-.173-.442-.173H5.615q-.269 0-.442.173T5 15v3.385q0 .269.173.442t.443.173M5 9.635V5zM5 19v-4.615z"/></svg>
+                    </div>
+                    <div class="grid-view-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25A2.25 2.25 0 0 1 10.5 15.75V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 15.75V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/></svg>
+                    </div>
                 </div>
                 <div class="themeMode" title="switch theme">
             <div class="day-mode">
@@ -87,14 +91,21 @@
                     </aside>
                         <main>
                             <div class="create-note" id="noteContainer">
+                                <div id="imagePreviewContainer" class="image-preview-container hidden">
+                                    <img id="imagePreview" src="" alt="Preview">
+                                    <button type="button" id="removeImageBtn" title="Delete photo" aria-label="Delete photo">&times;</button>
+                                </div>
                                 <div class="title hidden" id="titleBlock">
                                     <input class="title-input" type="text" name="title" placeholder="Title">
                                 </div>
                                 <textarea class="note-input" placeholder="Your Note" rows="1"></textarea>
                                     <div class="note-actions">        
-                                        <div id="addPhoto"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M13 6H13.01M1 14L6 9.00001C6.928 8.10701 8.072 8.10701 9 9.00001L14 14M12 12L13 11C13.928 10.107 15.072 10.107 16 11L19 14M1 4C1 3.20435 1.31607 2.44129 1.87868 1.87868C2.44129 1.31607 3.20435 1 4 1H16C16.7956 1 17.5587 1.31607 18.1213 1.87868C18.6839 2.44129 19 3.20435 19 4V16C19 16.7956 18.6839 17.5587 18.1213 18.1213C17.5587 18.6839 16.7956 19 16 19H4C3.20435 19 2.44129 18.6839 1.87868 18.1213C1.31607 17.5587 1 16.7956 1 16V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg></div>                
+                                        <label for="noteFileInput" id="addPhoto" title="Add photo">
+            <input id="noteFileInput" type="file" accept="image/*" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 6H13.01M1 14L6 9.00001C6.928 8.10701 8.072 8.10701 9 9.00001L14 14M12 12L13 11C13.928 10.107 15.072 10.107 16 11L19 14M1 4C1 3.20435 1.31607 2.44129 1.87868 1.87868C2.44129 1.31607 3.20435 1 4 1H16C16.7956 1 17.5587 1.31607 18.1213 1.87868C18.6839 2.44129 19 3.20435 19 4V16C19 16.7956 18.6839 17.5587 18.1213 18.1213C17.5587 18.6839 16.7956 19 16 19H4C3.20435 19 2.44129 18.6839 1.87868 18.1213C1.31607 17.5587 1 16.7956 1 16V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+                    </label>
                             <div class="button hidden" id="createBlock">
                                 <span class="button-create">Create</span>
                             </div>
@@ -120,11 +131,31 @@
                         </main>
                     <div id="noteModal" class=" modal hidden">
                         <div class="modal-content">
-                            <input type="text" id="modalTitle" class="modal-title" placeholder="Title">
-                            <textarea id="modalText" class="modal-text" placeholder="Text"></textarea>
-                            <div class="modal-footer">
-                                <span id="modalTimestamp" class="modal-timestamp"></span>
-                                <span id="saveModal" class="modal-save-btn">Close</span>
+                            <div id="modalImageContainer" class="modal-image-container hidden">
+                            <img id="modalImage" src="" alt="Note image">
+                        </div>
+                        <input type="text" id="modalTitle" class="modal-title" placeholder="Title">
+                        <textarea id="modalText" class="modal-text" placeholder="Note text"></textarea>
+                    <div class="modal-footer">
+                    <span id="modalTimestamp" class="modal-timestamp"></span>
+                                <button type="button" id="addModalImageBtn" class="modal-icon-btn" title="Add or replace photo" aria-label="Add or replace photo">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M13 6H13.01M1 14L6 9.00001C6.928 8.10701 8.072 8.10701 9 9.00001L14 14M12 12L13 11C13.928 10.107 15.072 10.107 16 11L19 14M1 4C1 3.20435 1.31607 2.44129 1.87868 1.87868C2.44129 1.31607 3.20435 1 4 1H16C16.7956 1 17.5587 1.31607 18.1213 1.87868C18.6839 2.44129 19 3.20435 19 4V16C19 16.7956 18.6839 17.5587 18.1213 18.1213C17.5587 18.6839 16.7956 19 16 19H4C3.20435 19 2.44129 18.6839 1.87868 18.1213C1.31607 17.5587 1 16.7956 1 16V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                                <input id="modalFileInput" type="file" accept="image/*" hidden>
+                                <button type="button" id="removeModalImageBtn" class="modal-icon-btn hidden" title="Remove photo" aria-label="Remove photo">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M13 6H13.01M1 14L6 9C6.928 8.107 8.072 8.107 9 9L14 14M12 12L13 11C13.928 10.107 15.072 10.107 16 11L19 14M1 4C1 2.343 2.343 1 4 1H16C17.657 1 19 2.343 19 4V16C19 17.657 17.657 19 16 19H4C2.343 19 1 17.657 1 16V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3 3L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                                <button type="button" id="deleteModalBtn" class="modal-icon-btn delete-modal-btn" title="Delete note" aria-label="Delete note">
+                                    <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M1 6.33333H25M10 11.6667V19.6667M16 11.6667V19.6667M2.5 6.33333L4 22.3333C4 23.0406 4.31607 23.7189 4.87868 24.219C5.44129 24.719 6.20435 25 7 25H19C19.7956 25 20.5587 24.719 21.1213 24.219C21.6839 23.7189 22 23.0406 22 22.3333L23.5 6.33333M8.5 6.33333V2.33333C8.5 1.97971 8.65804 1.64057 8.93934 1.39052C9.22064 1.14048 9.60218 1 10 1H16C16.3978 1 16.7794 1.14048 17.0607 1.39052C17.342 1.64057 17.5 1.97971 17.5 2.33333V6.33333" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                                <button type="button" id="saveModal" class="modal-save-btn">Close</button>
                             </div>
                         </div>
                     </div>

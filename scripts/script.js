@@ -23,6 +23,19 @@ const saveBtn = document.getElementById('saveModal')
 const viewToggleBtn = document.querySelector('.viewMode')
 const notesContainer = document.getElementById('notesContainer')
 
+const modalImageContainer = document.getElementById('modalImageContainer')
+const modalImage = document.getElementById('modalImage')
+const deleteModalBtn = document.getElementById('deleteModalBtn')
+const removeModalImageBtn = document.getElementById('removeModalImageBtn')
+const addModalImageBtn = document.getElementById('addModalImageBtn')
+const modalFileInput = document.getElementById('modalFileInput')
+
+const noteFileInput = document.getElementById('noteFileInput')
+const imagePreviewContainer = document.getElementById('imagePreviewContainer')
+const imagePreview = document.getElementById('imagePreview')
+const removeImageBtn = document.getElementById('removeImageBtn')
+
+
 let currentEditingId = null
 
 const openNote = document.getElementById('openNote')
@@ -147,6 +160,8 @@ function addNoteToArray (title, text){
         const newNote = {
             id: Date.now(),
             title: title,
+            content: text,
+            image: currentNoteImage,
             text: text,
             isPinned: false,
             reminder: null,
@@ -160,44 +175,124 @@ function addNoteToArray (title, text){
         }
         notes.push(newNote)
         saveNotes()
+        currentNoteImage = ''
+        if (noteFileInput) noteFileInput.value = ''
+        if (imagePreviewContainer) imagePreviewContainer.classList.add('hidden')
         return newNote
     }
 
-    function openModal(id){
-        const note = notes.find(n => n.id === id)
-    if(note){
-            currentEditingId = id
-            modalTitle.value = note.title
-            modalText.value = note.text
+    function openModal(id) {
+    const note = notes.find(n => n.id === id)
+    if (!note) return
 
-            const modalReminder = document.getElementById('modalReminder')
-            if(modalReminder){
-                modalReminder.value = note.reminder || ""
-            }
-            modal.classList.remove('hidden')
-        const timestampElement = document.getElementById('modalTimestamp')
-            if(note.createdAt){
-                timestampElement.innerText = `Created: ${note.createdAt}`
-            }else {
-                timestampElement.innerText = ''
-            }
-        }
+    currentEditingId = id
+    modalTitle.value = note.title || ''
+    modalText.value = note.text || ''
+
+    if (note.image && modalImageContainer && modalImage) {
+        modalImage.src = note.image
+        modalImageContainer.classList.remove('hidden')
+        if (removeModalImageBtn) removeModalImageBtn.classList.remove('hidden')
+    } else if (modalImageContainer) {
+        modalImageContainer.classList.add('hidden')
+        if (removeModalImageBtn) removeModalImageBtn.classList.add('hidden')
     }
-    
 
+    const timestampElement = document.getElementById('modalTimestamp')
+    if (timestampElement) {
+        timestampElement.innerText = note.createdAt ? `Created: ${note.createdAt}` : ''
+    }
+    modal.classList.remove('hidden')
+}
 
-    saveBtn.addEventListener('click', function(){
-        if(currentEditingId !==  null){
+if (removeModalImageBtn) {
+    removeModalImageBtn.addEventListener('click', function() {
+        const note = notes.find(n => n.id === currentEditingId)
+        if (!note) return
+
+        note.image = ''
+        modalImage.src = ''
+        modalImageContainer.classList.add('hidden')
+        removeModalImageBtn.classList.add('hidden')
+        saveNotes()
+        refreshNotes()
+    })
+}
+
+if (addModalImageBtn && modalFileInput) {
+    addModalImageBtn.addEventListener('click', function() {
+        modalFileInput.click()
+    })
+
+    modalFileInput.addEventListener('change', async function(event) {
+        const file = event.target.files[0]
+        const note = notes.find(n => n.id === currentEditingId)
+        if (!file || !note) return
+
+        try {
+            note.image = await compressImage(file)
+            modalImage.src = note.image
+            modalImageContainer.classList.remove('hidden')
+            removeModalImageBtn.classList.remove('hidden')
+            saveNotes()
+            refreshNotes()
+            modalFileInput.value = ''
+        } catch (error) {
+            console.error(error)
+            alert('Could not process this image. Please choose another file.')
+        }
+    })
+}
+
+if (deleteModalBtn) {
+    deleteModalBtn.addEventListener('click', function() {
+        if (currentEditingId !== null) {
+            const noteToTrash = notes.find(n => n.id === currentEditingId)
+            if (noteToTrash) {
+                trash.push(noteToTrash)
+                notes = notes.filter(n => n.id !== currentEditingId)
+                saveNotes()
+                refreshNotes()
+            }
+            modal.classList.add('hidden')
+            currentEditingId = null
+        }
+    })
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener('click', function() {
+        if (currentEditingId !== null) {
             const noteIndex = notes.findIndex(n => n.id === currentEditingId)
-            if(noteIndex !== -1){
-                notes[noteIndex].title = modalTitle.value
-                notes[noteIndex].text = modalText.value
+            if (noteIndex !== -1) {
+                notes[noteIndex].title = modalTitle.value.trim()
+                notes[noteIndex].text = modalText.value.trim()
+                notes[noteIndex].content = notes[noteIndex].text
                 saveNotes()
                 refreshNotes()
             }
         }
+
         modal.classList.add('hidden')
+        currentEditingId = null
     })
+}
+
+if (modal) {
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.classList.add('hidden')
+            currentEditingId = null
+        }
+    })
+}
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden')
+        currentEditingId = null
+    }
+})
 
 if (createBtn){
     createBtn.addEventListener('click', function(){
@@ -284,14 +379,35 @@ function renderNote(note, container){
         openModal(id)
     })
     
+    if (note.image) {
+        const imageDiv = document.createElement('div')
+        imageDiv.className = 'note-card-image'
+        imageDiv.innerHTML = `<img src="${note.image}" alt="Note photo">`
+        card.appendChild(imageDiv)
+    }
+
     const pinBtn = document.createElement('div')
     pinBtn.classList.add('pinBtn')
     pinBtn.innerHTML = `<svg width="17" height="20" viewBox="0 0 17 27" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M4 1V9.82353L1 15.7059V18.6471H16V15.7059V18.6471H16V15.7059L13 9.82353V1M8.5 18.6471V26M2.5 1H14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`
+    if (note.isPinned) pinBtn.classList.add('active')
     
-    if(note.isPinned) pinBtn.classList.add('active')
+    if (!isTrashMode) {
+        card.appendChild(pinBtn)
+    }
+
+    if (title) {
+        const h3 = document.createElement('h3')
+        h3.innerText = title
+        card.appendChild(h3)
+    }
     
+    const contentDiv = document.createElement('div')
+    contentDiv.className = 'note-text'
+    contentDiv.innerHTML = marked.parse(text || '')
+    card.appendChild(contentDiv)
+
     const footer = document.createElement('div')
     footer.classList.add('note-footer')
     
@@ -301,23 +417,19 @@ function renderNote(note, container){
 <path d="M1 6.33333H25M10 11.6667V19.6667M16 11.6667V19.6667M2.5 6.33333L4 22.3333C4 23.0406 4.31607 23.7189 4.87868 24.219C5.44129 24.719 6.20435 25 7 25H19C19.7956 25 20.5587 24.719 21.1213 24.219C21.6839 23.7189 22 23.0406 22 22.3333L23.5 6.33333M8.5 6.33333V2.33333C8.5 1.97971 8.65804 1.64057 8.93934 1.39052C9.22064 1.14048 9.60218 1 10 1H16C16.3978 1 16.7794 1.14048 17.0607 1.39052C17.342 1.64057 17.5 1.97971 17.5 2.33333V6.33333" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`
 
-    const archiveBtn = document.createElement('div');
-    archiveBtn.classList.add('archiveBtn');
+    const archiveBtn = document.createElement('div')
+    archiveBtn.classList.add('archiveBtn')
     archiveBtn.innerHTML = `<svg width="20" height="24" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M22.3333 7C23.0406 7 23.7189 6.68393 24.219 6.12132C24.719 5.55871 25 4.79565 25 4C25 3.20435 24.719 2.44129 24.219 1.87868C23.7189 1.31607 23.0406 1 22.3333 1H3.66667C2.95942 1 2.28115 1.31607 1.78105 1.87868C1.28095 2.44129 1 3.20435 1 4C1 4.79565 1.28095 5.55871 1.78105 6.12132C2.28115 6.68393 2.95942 7 3.66667 7M22.3333 7H3.66667M22.3333 7V22C22.3333 22.7956 22.0524 23.5587 21.5523 24.1213C21.0522 24.6839 20.3739 25 19.6667 25H6.33333C5.62609 25 4.94781 24.6839 4.44772 24.1213C3.94762 23.5587 3.66667 22.7956 3.66667 22V7M10.3333 13H15.6667" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
-    
-    if (!isTrashMode) {
-        card.appendChild(pinBtn)
-    }
+</svg>`
 
-    const restoreBtn = document.createElement('div');
-    restoreBtn.classList.add('restoreBtn');
+    const restoreBtn = document.createElement('div')
+    restoreBtn.classList.add('restoreBtn')
     restoreBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3 10H13C17.4183 10 21 13.5817 21 18V20M3 10L8 5M3 10L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>` 
-        
-    pinBtn.addEventListener('click', function(e){
+    </svg>`
+
+    pinBtn.addEventListener('click', function(e) {
         e.stopPropagation()
         note.isPinned = !note.isPinned
         saveNotes()
@@ -326,23 +438,20 @@ function renderNote(note, container){
     
     deleteBtn.addEventListener('click', function(event) {
         event.stopPropagation()
-        
         if (!isTrashMode) {
             if (isArchiveMode) {
                 const noteToTrash = archive.find(n => n.id === id)
-                trash.push(noteToTrash)
+                if (noteToTrash) trash.push(noteToTrash)
                 archive = archive.filter(n => n.id !== id)
             } else {
                 const noteToTrash = notes.find(n => n.id === id)
-                trash.push(noteToTrash)
+                if (noteToTrash) trash.push(noteToTrash)
                 notes = notes.filter(n => n.id !== id)
             }
         } else {
             trash = trash.filter(n => n.id !== id)
         }
-        
         saveNotes()
-        card.remove()
         refreshNotes()
     })
     
@@ -359,7 +468,6 @@ function renderNote(note, container){
 
     archiveBtn.addEventListener('click', function(event) {
         event.stopPropagation()
-
         if (isArchiveMode) {
             const noteToRestore = archive.find(n => n.id === id)
             if (noteToRestore) {
@@ -373,51 +481,38 @@ function renderNote(note, container){
                 notes = notes.filter(n => n.id !== id)
             }
         }
-        
         saveNotes()
-        card.remove()
         refreshNotes()
     })
-    
-    if(title){
-        const h3 = document.createElement('h3')
-        h3.innerText = title
-        card.appendChild(h3)
-    }
-    
-    const contentDiv = document.createElement('div')
-    contentDiv.className = 'note-text'
-    contentDiv.innerHTML = marked.parse(text || []
-    )
-    card.appendChild(contentDiv)
+
     if (!isTrashMode) {
         footer.appendChild(archiveBtn)
     }
-
     footer.appendChild(deleteBtn)
-
-    card.appendChild(footer)
-    container.prepend(card)
-    
     if (isTrashMode) {
         footer.appendChild(restoreBtn)
     }
+
+    card.appendChild(footer)
+    container.prepend(card)
 }
+
 refreshNotes()
 
 
-const gridIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-</svg>`
+function setViewMode(isListView) {
+    notesContainer.classList.toggle('list-view', isListView)
+    viewToggleBtn.classList.toggle('is-list-view', isListView)
+    localStorage.setItem('notesView', isListView ? 'list' : 'grid')
+}
 
-const listIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 10.635q-.691 0-1.153-.463T4 9.019V5.616q0-.691.463-1.153T5.616 4h12.769q.69 0 1.153.463T20 5.616v3.403q0 .69-.462 1.153t-1.153.463zm0-1h12.769q.269 0 .442-.173T19 9.019V5.616q0-.27-.173-.443T18.385 5H5.615q-.269 0-.442.173T5 5.616v3.403q0 .27.173.443t.443.173m0 10.365q-.691 0-1.153-.462T4 18.384V15q0-.69.463-1.153t1.153-.462h12.769q.69 0 1.153.462T20 15v3.385q0 .69-.462 1.152T18.384 20zm0-1h12.769q.269 0 .442-.173t.173-.442V15q0-.27-.173-.442q-.173-.173-.442-.173H5.615q-.269 0-.442.173T5 15v3.385q0 .269.173.442t.443.173M5 9.635V5zM5 19v-4.615z"/></svg>`
-let isListView = false
+if (viewToggleBtn && notesContainer) {
+    setViewMode(localStorage.getItem('notesView') === 'list')
 
-viewToggleBtn.addEventListener('click', () => {
-    notesContainer.classList.toggle('list-view')
-    isListView = notesContainer.classList.contains('list-view')
-    viewToggleBtn.innerHTML = isListView? gridIcon: listIcon
-})
+    viewToggleBtn.addEventListener('click', () => {
+        setViewMode(!notesContainer.classList.contains('list-view'))
+    })
+}
 
 const themeMode = document.querySelector('.themeMode')
 const savedTheme = localStorage.getItem('theme')
@@ -430,4 +525,62 @@ themeMode.addEventListener('click', () =>{
     const isLight = document.body.classList.contains('light-theme')
     localStorage.setItem('theme', isLight ? 'light': 'dark')
 })
+}
+
+let currentNoteImage = ''
+
+const MAX_IMAGE_SIZE = 1280
+const IMAGE_QUALITY = 0.75
+
+function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader()
+
+        fileReader.onload = function() {
+            const image = new Image()
+
+            image.onload = function() {
+                const scale = Math.min(1, MAX_IMAGE_SIZE / Math.max(image.width, image.height))
+                const canvas = document.createElement('canvas')
+                canvas.width = Math.round(image.width * scale)
+                canvas.height = Math.round(image.height * scale)
+
+                const context = canvas.getContext('2d')
+                context.drawImage(image, 0, 0, canvas.width, canvas.height)
+                resolve(canvas.toDataURL('image/webp', IMAGE_QUALITY))
+            }
+
+            image.onerror = () => reject(new Error('Image could not be loaded'))
+            image.src = fileReader.result
+        }
+
+        fileReader.onerror = () => reject(new Error('File could not be read'))
+        fileReader.readAsDataURL(file)
+    })
+}
+
+if (noteFileInput) {
+    noteFileInput.addEventListener('change', async function(event) {
+        const file = event.target.files[0]
+        if (!file) return
+
+        try {
+            currentNoteImage = await compressImage(file)
+            imagePreview.src = currentNoteImage
+            imagePreviewContainer.classList.remove('hidden')
+        } catch (error) {
+            console.error(error)
+            alert('Could not process this image. Please choose another file.')
+        }
+    })
+}
+
+if (removeImageBtn) {
+    removeImageBtn.addEventListener('click', () =>{
+        currentNoteImage = ''
+        noteFileInput.value = ''
+        if(imagePreviewContainer){
+            imagePreviewContainer.classList.add('hidden')
+        }
+    })
 }
