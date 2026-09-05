@@ -7,12 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>IceNote</title>
 </head>
     <body>
+        <div id="overlay" class="overlay" aria-hidden="true"></div>
         <nav class="headerBar">
             <div class="header-left">
                 <div id="burger"><svg width="24" height="24" viewBox="0 0 31 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,6 +52,9 @@
         </nav>  
                 <div class="wrapper">
                     <aside class="sidebar">
+                        <div class="sidebar-header">
+                            <span class="sidebar-title">IceNote</span>
+                        </div>
                         <nav class="sidebar-nav">
                             <ul>
                                 <li id="openNote" class="sidebar-item active" >
@@ -69,6 +72,7 @@
 </svg>
                                     </div>
                                     <span class="sidebar-label">Archive</span>
+                                </li>
                                 <li id="openTrash"class="sidebar-item">
                                     <div class="sidebar-icon">
                                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +122,6 @@
                                             </div>
                                         </div>
                                     </div>
-                            </div>
                         </main>
                     <div id="noteModal" class=" modal hidden">
                         <div class="modal-content">

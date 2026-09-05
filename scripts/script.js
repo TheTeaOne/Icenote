@@ -4,6 +4,8 @@ marked.use({
 })
 const burger = document.getElementById("burger")
 const sidebar = document.querySelector(".sidebar")
+const overlay = document.getElementById("overlay")
+
 
 const searchInput = document.getElementById('searchInput')
 const noteContainer = document.getElementById('noteContainer')
@@ -41,7 +43,6 @@ let currentEditingId = null
 const openNote = document.getElementById('openNote')
 const openTrash = document.getElementById('openTrash')
 const openArchive = document.getElementById('openArchive')
-const openRemind = document.getElementById('openRemind')
 
 let notes = JSON.parse(localStorage.getItem('notes')) || []
 let trash = JSON.parse(localStorage.getItem('trash')) || []
@@ -49,9 +50,40 @@ let archive = JSON.parse(localStorage.getItem('archive')) || []
 let isTrashMode = false
 let isArchiveMode = false
 
-burger.addEventListener("click", function() {
-    sidebar.classList.toggle("open")
-})
+function getCurrentNote() {
+    const currentNotes = isArchiveMode ? archive : notes
+    return currentNotes.find(note => note.id === currentEditingId)
+}
+
+function setSidebarState(isOpen) {
+    if (!sidebar || !overlay) return
+
+    sidebar.classList.toggle('open', isOpen)
+    overlay.classList.toggle('active', isOpen)
+    overlay.setAttribute('aria-hidden', String(!isOpen))
+}
+
+function toggleSidebar() {
+    setSidebarState(!sidebar.classList.contains('open'))
+}
+
+if (burger) {
+    burger.addEventListener("click", toggleSidebar)
+}
+
+if (overlay) {
+    overlay.addEventListener('click', () => setSidebarState(false))
+
+    let swipeStartX = 0
+    overlay.addEventListener('touchstart', event => {
+        swipeStartX = event.changedTouches[0].clientX
+    }, { passive: true })
+
+    overlay.addEventListener('touchend', event => {
+        const swipeDistance = event.changedTouches[0].clientX - swipeStartX
+        if (Math.abs(swipeDistance) > 50) setSidebarState(false)
+    }, { passive: true })
+}
 
 if (noteInput) {
     noteInput.addEventListener('input', function() {
@@ -75,7 +107,6 @@ if(searchInput){
 function checkEmpty(){
     const pinnedWrapper = document.getElementById('pinnedWrapper')
     const notesWrapper = document.getElementById('notesWrapper')
-    const currentArray = isTrashMode ? trash : notes
     const emptyText = document.getElementById('emptyText')
     const searchValue = searchInput ? searchInput.value.trim() : ""
     const hasNotes = pinnedWrapper.children.length > 0 || notesWrapper.children.length > 0
@@ -182,7 +213,10 @@ function addNoteToArray (title, text){
     }
 
     function openModal(id) {
-    const note = notes.find(n => n.id === id)
+    if (isTrashMode) return
+
+    const currentNotes = isArchiveMode ? archive : notes
+    const note = currentNotes.find(n => n.id === id)
     if (!note) return
 
     currentEditingId = id
@@ -207,7 +241,7 @@ function addNoteToArray (title, text){
 
 if (removeModalImageBtn) {
     removeModalImageBtn.addEventListener('click', function() {
-        const note = notes.find(n => n.id === currentEditingId)
+        const note = getCurrentNote()
         if (!note) return
 
         note.image = ''
@@ -226,7 +260,7 @@ if (addModalImageBtn && modalFileInput) {
 
     modalFileInput.addEventListener('change', async function(event) {
         const file = event.target.files[0]
-        const note = notes.find(n => n.id === currentEditingId)
+        const note = getCurrentNote()
         if (!file || !note) return
 
         try {
@@ -247,10 +281,15 @@ if (addModalImageBtn && modalFileInput) {
 if (deleteModalBtn) {
     deleteModalBtn.addEventListener('click', function() {
         if (currentEditingId !== null) {
-            const noteToTrash = notes.find(n => n.id === currentEditingId)
+            const currentNotes = isArchiveMode ? archive : notes
+            const noteToTrash = getCurrentNote()
             if (noteToTrash) {
                 trash.push(noteToTrash)
-                notes = notes.filter(n => n.id !== currentEditingId)
+                if (isArchiveMode) {
+                    archive = currentNotes.filter(n => n.id !== currentEditingId)
+                } else {
+                    notes = currentNotes.filter(n => n.id !== currentEditingId)
+                }
                 saveNotes()
                 refreshNotes()
             }
@@ -263,11 +302,12 @@ if (deleteModalBtn) {
 if (saveBtn) {
     saveBtn.addEventListener('click', function() {
         if (currentEditingId !== null) {
-            const noteIndex = notes.findIndex(n => n.id === currentEditingId)
+            const currentNotes = isArchiveMode ? archive : notes
+            const noteIndex = currentNotes.findIndex(n => n.id === currentEditingId)
             if (noteIndex !== -1) {
-                notes[noteIndex].title = modalTitle.value.trim()
-                notes[noteIndex].text = modalText.value.trim()
-                notes[noteIndex].content = notes[noteIndex].text
+                currentNotes[noteIndex].title = modalTitle.value.trim()
+                currentNotes[noteIndex].text = modalText.value.trim()
+                currentNotes[noteIndex].content = currentNotes[noteIndex].text
                 saveNotes()
                 refreshNotes()
             }
@@ -280,7 +320,7 @@ if (saveBtn) {
 
 if (modal) {
     modal.addEventListener('click', function(event) {
-        if (event.target === modal) {
+        if (event.target === modal && window.innerWidth > 1024) {
             modal.classList.add('hidden')
             currentEditingId = null
         }
@@ -375,9 +415,11 @@ function renderNote(note, container){
     const card = document.createElement('div')
     card.classList.add('note-card')
     card.dataset.id = id
-    card.addEventListener('click', function(){
-        openModal(id)
-    })
+    if (!isTrashMode) {
+        card.addEventListener('click', function(){
+            openModal(id)
+        })
+    }
     
     if (note.image) {
         const imageDiv = document.createElement('div')
@@ -457,13 +499,13 @@ function renderNote(note, container){
     
     restoreBtn.addEventListener('click', function(event) {
         event.stopPropagation()
-        const noteToRestore = trash.find(n => n.id === id)
-        if (noteToRestore) {
-            notes.push(noteToRestore)
-            trash = trash.filter(n => n.id !== id)
-            saveNotes()
-            refreshNotes()
-        }
+        const trashIndex = trash.indexOf(note)
+        if (trashIndex === -1) return
+
+        const [noteToRestore] = trash.splice(trashIndex, 1)
+        notes.push(noteToRestore)
+        saveNotes()
+        refreshNotes()
     })
 
     archiveBtn.addEventListener('click', function(event) {
